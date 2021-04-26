@@ -13,7 +13,6 @@ const Mapbox = () => {
     zoom: 11,
   });
   const mapRef = useRef();
-  const geocoderContainerRef = useRef();
   const handleViewportChange = useCallback(
     (newViewport) => setViewport(newViewport),
     []
@@ -34,28 +33,6 @@ const Mapbox = () => {
 
   return (
     <div style={{ height: "100vh" }}>
-      <div
-        style={{
-          height: 50,
-          // minWidth: "50vw",
-          // flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100vw",
-          background: "darkgray",
-        }}
-      >
-        <div
-          ref={geocoderContainerRef}
-          style={{
-            display: "flex",
-            width: "100vw",
-            paddingLeft: 4,
-            // alignItems: "center",
-          }}
-        />
-      </div>
       <MapGL
         ref={mapRef}
         {...viewport}
@@ -66,13 +43,9 @@ const Mapbox = () => {
       >
         <Geocoder
           mapRef={mapRef}
-          containerRef={geocoderContainerRef}
           onViewportChange={handleGeocoderViewportChange}
           mapboxApiAccessToken={MAPBOX_TOKEN}
-          bbox={[-87.95897540987545, 41.63939121520151, -87.51939354167332, 42.02923118657451]}
-          style={{
-            // alignItems: "center",
-          }}
+          position="top-left"
         />
       </MapGL>
     </div>
