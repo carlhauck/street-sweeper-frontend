@@ -4,6 +4,9 @@ import React, { useState, useRef, useCallback } from "react";
 import MapGL from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
 
+import API from '../api';
+
+
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
 const Mapbox = () => {
@@ -12,8 +15,23 @@ const Mapbox = () => {
     longitude: -87.6298,
     zoom: 11,
   });
+  const [zoneData, setZoneData] = useState([]);
   const mapRef = useRef();
   const geocoderContainerRef = useRef();
+
+  const handleResult = (e) => {
+    console.log(e.result.place_name);
+    API.get("api/zones", {
+      params: {
+        address: e.result.place_name
+      }
+    })
+      .then(res => {
+        console.log(res.data.sort((a, b) => a.month_number - b.month_number));
+        setZoneData(res.data.sort((a, b) => a.month_number - b.month_number));
+      })
+  };
+
   const handleViewportChange = useCallback(
     (newViewport) => setViewport(newViewport),
     []
@@ -33,12 +51,10 @@ const Mapbox = () => {
   );
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "50vh" }}>
       <div
         style={{
           height: 50,
-          // minWidth: "50vw",
-          // flex: 1,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -52,7 +68,6 @@ const Mapbox = () => {
             display: "flex",
             width: "100vw",
             paddingLeft: 4,
-            // alignItems: "center",
           }}
         />
       </div>
@@ -69,12 +84,24 @@ const Mapbox = () => {
           containerRef={geocoderContainerRef}
           onViewportChange={handleGeocoderViewportChange}
           mapboxApiAccessToken={MAPBOX_TOKEN}
+          onResult={handleResult}
           bbox={[-87.95897540987545, 41.63939121520151, -87.51939354167332, 42.02923118657451]}
-          style={{
-            // alignItems: "center",
-          }}
         />
       </MapGL>
+      <div
+      // style={{
+      //   position: "absolute",
+      //   width: "200px",
+      //   top: 0,
+      //   right: 0,
+      //   zIndex: 5,
+      // }}
+      >
+        {zoneData.map(r => {
+          let schedule = <p key={r.id} id={r.id}>{r.month_number} - {r.dates}</p>
+          return schedule
+        })}
+      </div>
     </div>
   );
 };
