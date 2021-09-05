@@ -5,6 +5,7 @@ import MapGL, { Layer, Source } from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
 
 import API from '../api';
+import Calendar from './calendar';
 
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -14,8 +15,6 @@ const Mapbox = () => {
     latitude: 41.8781,
     longitude: -87.6298,
     zoom: 11,
-    minzoom: 10,
-    maxzoom: 17
     // style: {
     //   "version": 8,
     // "name": "{name}",
@@ -31,6 +30,7 @@ const Mapbox = () => {
   const [addressPoint, setAddressPoint] = useState([]);
   const mapRef = useRef();
   const geocoderContainerRef = useRef();
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
   const handleResult = useCallback(
     (e) => {
@@ -169,11 +169,18 @@ const Mapbox = () => {
         </MapGL>
       </div >
       {zoneData &&
-        <div className="w-1/3 text-green-600">
-          {zoneData.map(r => {
-            let schedule = <p key={r.id} id={r.id}>{r.month_number} - {r.dates}</p>
-            return schedule
-          })}
+        <div className="flex w-1/3">
+          <div className="text-green-600">
+            {zoneData.map(r => {
+              let schedule = <p key={r.id} id={r.id}>
+                {months[r.month_number - 1]}: {r.dates.split(",").map(date => new Date(2021, r.month_number - 1, date).toLocaleDateString('en-US', { weekday: "short", day: "numeric" })).join(", ")}
+              </p>
+              return schedule;
+            })}
+          </div>
+          <div>
+            <Calendar />
+          </div>
         </div>
       }
     </div>

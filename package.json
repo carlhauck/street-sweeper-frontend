@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "mapbox-gl": "^1.13.1",
     "react": "^16.11.0",
+    "react-calendar": "^3.4.0",
     "react-dom": "^16.11.0",
     "react-map-gl": "^6.1.12",
     "react-map-gl-geocoder": "^2.1.6",
